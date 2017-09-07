@@ -14,10 +14,21 @@ static init_func init[]={
 	0,
 };
 
+void test_mmu(void){
+	const char *p="test_mmu\n";
+	while(*p){
+		*(volatile unsigned int *)0xd9000020=*p++;
+	};
+}
+
+
 void plat_boot(void){
 	int i;
 	for(i=0;init[i];i++){
-	init[i]();
+		init[i]();
 	}
+	init_sys_mmu();
+	start_mmu();
+	test_mmu();
 	while(1);
 }
